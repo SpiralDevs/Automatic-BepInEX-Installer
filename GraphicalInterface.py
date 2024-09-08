@@ -60,7 +60,7 @@ class InterfaceMenu:
         self.root.geometry("400x335")
         self.root.resizable(0, 0)
         self.root.title("BepInstaller - The Automatic BepInEX Installer by Spiral")
-        self.root.iconbitmap("resources/isle-goblin-mod-maker.ico")
+        self.root.iconbitmap("resources/bepinstaller.ico")
 
         self.main_frame = Frame(self.root)
         self.main_frame.pack(fill="both", expand=True)
