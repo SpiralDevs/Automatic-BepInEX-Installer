@@ -114,7 +114,28 @@ class InterfaceMenu:
         self.game_folder_entry.grid(row=2, column=0, columnspan=2, padx=10, pady=(0, 20), sticky="ew")
         Tooltip(self.game_folder_entry, "Enter the folder name of the game in Steam's common directory.")
 
-        Label(frame, background="#353738", fg="#edf2f4", font=("Calibri", 12), text="Steam Directory").grid(row=3, column=0, columnspan=2, padx=10, pady=(10, 5), sticky="ew")
+        def auto_find_steam_directory():
+            foldername = self.game_folder_entry.get()
+            steampath = self.steam_dir_entry.get()
+            if not os.path.isdir(os.path.join(steampath, foldername)):
+                # Try to find the correct Steam directory
+                steam_path = find_steam_directory(foldername)
+                if not steam_path:
+                    messagebox.showerror("Game Not Found",
+                                        f"Game Not Found. There is no directory \"{os.path.join(steam_path, foldername)}\"",
+                                        parent=self)
+                    return False
+                
+                self.steam_dir_entry.delete(0, "end")
+                self.steam_dir_entry.insert(0, steam_path)
+            elif steampath==find_steam_directory(foldername):
+                messagebox.showinfo("Steam Directory Already Set", "The correct Steam directory has already been set.")
+            else:
+                messagebox.showwarning("Something went wrong :(", f"Directory {os.path.join(steampath, foldername)} does not exist.")
+            frame.focus()
+
+        Label(frame, background="#353738", fg="#edf2f4", font=("Calibri", 12), text="Steam Directory").grid(row=3, column=0, padx=10, pady=(5, 5), sticky="e")
+        Button(frame, text="Auto Find Steam Directory", bg="#353738", fg="#edf2f4", command=auto_find_steam_directory).grid(row=3, column=0, padx=10, pady=(5, 5), sticky="w")
         self.steam_dir_entry = Entry(frame, background="#353738", fg="#edf2f4", font=("Calibri", 12))
         self.steam_dir_entry.grid(row=4, column=0, columnspan=2, padx=10, pady=(0, 20), sticky="ew")
         Tooltip(self.steam_dir_entry, "Enter the Steam installation directory. Auto-detection available.")
@@ -146,6 +167,8 @@ class InterfaceMenu:
                     messagebox.showinfo("BepInEx Already Installed", f"BepInEx is already installed in {os.path.join(steam_dir, foldername)}")
             else:
                 messagebox.showerror("Error", "Invalid directory: The game folder does not exist.")
+                
+        
 
         Button(frame, text="Install BepInEX", bg="#353738", fg="#edf2f4", command=install_bepinex).grid(row=5, column=0, columnspan=2, padx=10, pady=(10, 20))
 
