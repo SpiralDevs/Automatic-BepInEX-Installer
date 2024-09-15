@@ -11,6 +11,7 @@ except:
 import requests
 import zipfile
 
+icon_path = os.path.join('resources', 'bepinstaller.ico')
 
 class Tooltip:
     def __init__(self, widget, text):
@@ -60,7 +61,7 @@ class InterfaceMenu:
         self.root.geometry("400x335")
         self.root.resizable(0, 0)
         self.root.title("BepInstaller - The Automatic BepInEX Installer by Spiral")
-        self.root.iconbitmap("resources/bepinstaller.ico")
+        self.root.iconbitmap(icon_path)
 
         self.main_frame = Frame(self.root)
         self.main_frame.pack(fill="both", expand=True)
