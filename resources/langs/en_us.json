@@ -1,0 +1,19 @@
+{
+  "root": {
+    "title": "BepInstaller - The Automatic BepInEX Installer by Spiral",
+    "short_title": "Steam Installer"
+  },
+  "widget": {
+    "insert": "insert"
+  },
+  "non_steam_install": "Non-Steam Installation",
+  "steam_install": "Steam Installation",
+  "steam_common_dir_prompt": "Steam Installer",
+
+  "errors": {
+    "game_not_found": {
+      "title": "Game Not Found",
+      "desc": "Game Not Found. There is no directory"
+    }
+  }
+}

@@ -3,6 +3,7 @@ import os
 from tkinter import messagebox, filedialog
 from tkinter import *
 from pygame import mixer
+import translations as key
 try:
     import winreg
 except:
@@ -32,7 +33,7 @@ class Tooltip:
         temp_label.destroy()
 
         # Get widget position and calculate center
-        x, y, _, _ = self.widget.bbox("insert")
+        x, y, _, _ = self.widget.bbox(key.WIDGETS_INSERT)
         x += self.widget.winfo_rootx()
         y += self.widget.winfo_rooty() + 25
 
@@ -60,7 +61,7 @@ class InterfaceMenu:
         self.root.configure(background="#353738")
         self.root.geometry("400x335")
         self.root.resizable(0, 0)
-        self.root.title("BepInstaller - The Automatic BepInEX Installer by Spiral")
+        self.root.title(key.ROOT_TITLE)
         self.root.iconbitmap(icon_path)
 
         self.main_frame = Frame(self.root)
@@ -81,7 +82,7 @@ class InterfaceMenu:
         # Create toggle button
         nav_frame = Frame(self.root, background="#353738")
         nav_frame.pack()
-        self.toggle_button = Button(nav_frame, text="Non-Steam Installation", bg="#353738", fg="#edf2f4",
+        self.toggle_button = Button(nav_frame, text=key.NON_STEAM, bg="#353738", fg="#edf2f4",
                                     command=self.toggle_installation_mode)
         self.toggle_button.grid(row=0, column=0, padx=10, pady=(10, 10))
 
@@ -97,23 +98,23 @@ class InterfaceMenu:
         """Toggle between Steam and Non-Steam installation pages."""
         if self.current_frame == self.steam_frame:
             self.current_frame = self.nonsteam_frame
-            self.toggle_button.config(text="Steam Installation")
+            self.toggle_button.config(text=key.STEAM_INSTALL)
         else:
             self.current_frame = self.steam_frame
-            self.toggle_button.config(text="Non-Steam Installation")
+            self.toggle_button.config(text=key.NON_STEAM_INSTALL)
         self.show_frame(self.current_frame)
 
     def create_steam_page(self, parent):
         frame = Frame(parent, background="#353738")
         frame.pack(fill="both", expand=True)
 
-        heading = Label(frame, text="Steam Installer", font=("Calibri", 18), background="#353738", fg="#edf2f4")
+        heading = Label(frame, text=key.ROOT_SHORT_TITLE, font=("Calibri", 18), background="#353738", fg="#edf2f4")
         heading.grid(row=0, column=0, columnspan=2, pady=10, sticky="ew")
         
         Label(frame, background="#353738", fg="#edf2f4", font=("Calibri", 12), text="Game Name Folder").grid(row=1, column=0, columnspan=2, padx=10, pady=(10, 5), sticky="ew")
         self.game_folder_entry = Entry(frame, background="#353738", fg="#edf2f4", font=("Calibri", 12))
         self.game_folder_entry.grid(row=2, column=0, columnspan=2, padx=10, pady=(0, 20), sticky="ew")
-        Tooltip(self.game_folder_entry, "Enter the folder name of the game in Steam's common directory.")
+        Tooltip(self.game_folder_entry, key.STEAM_COMMON_DIR_PROMPT)
 
         def auto_find_steam_directory():
             foldername = self.game_folder_entry.get()
@@ -122,8 +123,8 @@ class InterfaceMenu:
                 # Try to find the correct Steam directory
                 steam_path = find_steam_directory(foldername)
                 if not steam_path:
-                    messagebox.showerror("Game Not Found",
-                                        f"Game Not Found. There is no directory \"{os.path.join(steam_path, foldername)}\"",
+                    messagebox.showerror(key.ERRORS_GAMENOTFOUND_TITLE,
+                                        key.ERRORS_GAMENOTFOUND_DESC + f" \"{os.path.join(steam_path, foldername)}\"",
                                         parent=self)
                     return False
                 
