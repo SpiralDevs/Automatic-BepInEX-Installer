@@ -1,19 +1,90 @@
 {
   "root": {
-    "title": "BepInstaller - The Automatic BepInEX Installer by Spiral",
-    "short_title": "Steam Installer"
+    "title": "BepInstaller - The Automatic BepInEX Installer by Spiral and Echo",
+    "steam": "Steam Installer",
+    "non_steam": "Non-Steam Installer"
   },
   "widget": {
     "insert": "insert"
   },
   "non_steam_install": "Non-Steam Installation",
   "steam_install": "Steam Installation",
-  "steam_common_dir_prompt": "Steam Installer",
+  "install_bepinex": "Install BepInEX",
+  "select_bepinex_ver": "Select BepInEx Version:",
+  
+  "steam": {
+    "game_name_folder": "Game Name Folder",
+    "steam_directory": "Steam Directory",
+    "autofind_dir": "Auto Find Steam Directory"
+  },
+  
+  "non_steam": {
+    "ask_dir": "Select Non-Steam Game Directory",
+    "game_dir": "Game Directory",
+    "open_folder": "Open Folder"
+  },
+
+  "tooltip": {
+    "enter_steam_dir": "Enter the Steam installation directory. Auto-detection available.",
+    "game_name_folder": "Enter the folder name of the game in Steam's common directory.",
+    "enter_dir": "Enter the full directory path for the game installation.",
+    "open_dir": "Click 'Open Folder' to select your game directory or type it in yourself"
+  },
+
+  "info": {
+    "steam_dir_already_set": {
+      "title": "Steam Directory Already Set",
+      "desc": "The correct Steam directory has already been set."
+    },
+    "bepinex_installed": {
+      "title": "BepInEx Installed",
+      "desc": "BepInEx has been installed. Please run the game once, then exit."
+    },
+    "bepinex_already_added": {
+      "title": "BepInEx Already Installed",
+      "desc": "BepInEx is already installed in "
+    }
+  },
+
+  "warning": {
+    "steam_dir_already_set": {
+      "title": "Steam Directory Already Set",
+      "desc": "The correct Steam directory has already been set."
+    }
+  },
 
   "errors": {
     "game_not_found": {
       "title": "Game Not Found",
       "desc": "Game Not Found. There is no directory"
+    },
+    "no_valid_url": {
+      "title": "Error",
+      "desc": "No valid download URL found."
+    },
+    "invalid_dir": {
+      "title": "Invalid Directory",
+      "desc": "The specified directory does not exist."
+    },
+    "empty_game_folder": {
+      "title": "Error",
+      "desc": "Game Name Folder cannot be empty."
+    },
+    "empty_steam_dir": {
+      "title": "Error",
+      "desc": "Steam Directory cannot be empty."
+    },
+    "empty_game_dir": {
+      "title": "Error",
+      "desc": "Game Directory cannot be empty."
+    },
+    "unsupported_os": {
+      "title": "Unsupported OS",
+      "desc": "Unsupported OS detected."
+    },
+    "invalid_path": {
+      "title": "Error",
+      "desc": "Path doesn't exist: "
     }
   }
 }

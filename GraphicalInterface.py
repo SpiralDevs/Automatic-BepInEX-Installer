@@ -89,7 +89,7 @@ class InterfaceMenu:
         # Create togglle button
         nav_frame = Frame(self.root, background="#353738")
         nav_frame.pack()
-        self.toggle_button = Button(nav_frame, text=key.NON_STEAM, bg="#353738", fg="#edf2f4",
+        self.toggle_button = Button(nav_frame, text=key.NON_STEAM_INSTALL, bg="#353738", fg="#edf2f4",
                                     command=self.toggle_installation_mode)
         self.toggle_button.grid(row=0, column=0, padx=10, pady=(10, 10))
         
@@ -111,7 +111,7 @@ class InterfaceMenu:
                 else:
                     url = None
             else:
-                print(f"Error fetching versions: {response.status_code}")
+                # print(f"Error fetching versions: {response.status_code}")
                 return ["5.4.21", "6.0.0-pre.1", "6.0.0-pre.2"]  # Default falback
 
         return releases
@@ -144,18 +144,18 @@ class InterfaceMenu:
         frame = Frame(parent, background="#353738")
         frame.pack(fill="both", expand=True)
 
-        heading = Label(frame, text=key.ROOT_SHORT_TITLE, font=("Calibri", 18), background="#353738", fg="#edf2f4")
+        heading = Label(frame, text=key.ROOT_STEAM, font=("Calibri", 18), background="#353738", fg="#edf2f4")
         heading.grid(row=0, column=0, columnspan=2, pady=10, sticky="ew")
         
-        Label(frame, text="Select BepInEx Version:", background="#353738", fg="#edf2f4", font=("Calibri", 12)).grid(row=5, column=0, columnspan=2, padx=10, pady=(5, 5), sticky="ew")
+        Label(frame, text=key.SELECTBEPINEX, background="#353738", fg="#edf2f4", font=("Calibri", 12)).grid(row=5, column=0, columnspan=2, padx=10, pady=(5, 5), sticky="ew")
         version_dropdown = OptionMenu(frame, self.selected_version, *self.bepinex_versions)
         version_dropdown.config(background="#353738", fg="#edf2f4", font=("Calibri", 12))
         version_dropdown.grid(row=6, column=0, columnspan=2, padx=10, pady=(5, 20), sticky="")
 
-        Label(frame, background="#353738", fg="#edf2f4", font=("Calibri", 12), text="Game Name Folder").grid(row=1, column=0, columnspan=2, padx=10, pady=(10, 5), sticky="ew")
+        Label(frame, background="#353738", fg="#edf2f4", font=("Calibri", 12), text=key.STEAM_GAMENAMEFOLDER).grid(row=1, column=0, columnspan=2, padx=10, pady=(10, 5), sticky="ew")
         self.game_folder_entry = Entry(frame, background="#353738", fg="#edf2f4", font=("Calibri", 12))
         self.game_folder_entry.grid(row=2, column=0, columnspan=2, padx=10, pady=(0, 20), sticky="ew")
-        Tooltip(self.game_folder_entry, key.STEAM_COMMON_DIR_PROMPT)
+        Tooltip(self.game_folder_entry, key.TOOLTIP_GAMENAMEFOLDER)
 
         def auto_find_steam_directory():
             foldername = self.game_folder_entry.get()
@@ -172,16 +172,18 @@ class InterfaceMenu:
                 self.steam_dir_entry.delete(0, "end")
                 self.steam_dir_entry.insert(0, steam_path)
             elif steampath==find_steam_directory(foldername):
-                messagebox.showinfo("Steam Directory Already Set", "The correct Steam directory has already been set.")
+                messagebox.showinfo(key.INFO_STEAMALREADYSET_TITLE, key.INFO_STEAMALREADYSET_TITLE)
             else:
-                messagebox.showwarning("Something went wrong :(", f"Directory {os.path.join(steampath, foldername)} does not exist.")
+                messagebox.showerror(key.ERRORS_GAMENOTFOUND_TITLE, key.ERRORS_GAMENOTFOUND_DESC + f" \"{os.path.join(steam_path, foldername)}\"")
             frame.focus()
 
-        Label(frame, background="#353738", fg="#edf2f4", font=("Calibri", 12), text="Steam Directory").grid(row=3, column=0, padx=10, pady=(5, 5), sticky="e")
-        Button(frame, text="Auto Find Steam Directory", bg="#353738", fg="#edf2f4", command=auto_find_steam_directory).grid(row=3, column=0, padx=10, pady=(5, 5), sticky="w")
+        Label(frame, background="#353738", fg="#edf2f4", font=("Calibri", 12), text=key.STEAM_STEAMDIR).grid(row=3, column=0, padx=10, pady=(5, 5), sticky="e")
+        
+        Button(frame, text=key.STEAM_AUTOFINDDIR, bg="#353738", fg="#edf2f4", command=auto_find_steam_directory).grid(row=3, column=0, padx=10, pady=(5, 5), sticky="w")
+        
         self.steam_dir_entry = Entry(frame, background="#353738", fg="#edf2f4", font=("Calibri", 12))
         self.steam_dir_entry.grid(row=4, column=0, columnspan=2, padx=10, pady=(0, 20), sticky="ew")
-        Tooltip(self.steam_dir_entry, "Enter the Steam installation directory. Auto-detection available.")
+        Tooltip(self.steam_dir_entry, key.TOOLTIP_ENTERSTEAMDIR)
 
         def install_bepinex():
             foldername = self.game_folder_entry.get()
@@ -190,10 +192,10 @@ class InterfaceMenu:
             scripting_backend = detect_scripting_backend(os.path.join(steam_dir, foldername))
 
             if not foldername.strip():
-                messagebox.showerror("Error", "Game Name Folder cannot be empty.")
+                messagebox.showerror(key.ERRORS_EMPTYGAMEFOLDER_TITLE, key.ERRORS_EMPTYGAMEFOLDER_DESC)
                 return
             if not steam_dir.strip():
-                messagebox.showerror("Error", "Steam Directory cannot be empty.")
+                messagebox.showerror(key.ERRORS_EMPTYSTEAMDIR_TITLE, key.ERRORS_EMPTYSTEAMDIR_DESC)
                 return
 
             if steam_dir and os.path.isdir(os.path.join(steam_dir, foldername)):
@@ -207,14 +209,14 @@ class InterfaceMenu:
                     doorstop_dest = os.path.join(steam_dir, foldername, ".doorstop_version")
                     if os.path.exists(doorstop_dest):
                         os.remove(doorstop_dest)
-                    messagebox.showinfo("BepInEx Installed", "BepInEx has been installed. Please run the game once, then exit.")
+                    messagebox.showinfo(key.INFO_BEPINEXINSTALLED_TITLE, key.INFO_BEPINEXINSTALLED_DESC)
                 else:
-                    messagebox.showinfo("BepInEx Already Installed", f"BepInEx is already installed in {os.path.join(steam_dir, foldername)}")
+                    messagebox.showinfo(key.INFO_BEPINEXALREADYADDED_TITLE, key.INFO_BEPINEXALREADYADDED_DESC + foldername)
             else:
-                messagebox.showerror("Error", "Invalid directory: The game folder does not exist.")
+                messagebox.showerror(key.ERRORS_INVALIDDIR_TITLE, key.ERRORS_INVALIDDIR_DESC)
                 
         
-        Button(frame, text="Install BepInEX", bg="#353738", fg="#edf2f4", command=install_bepinex).grid(row=7, column=0, columnspan=2, padx=10, pady=(10, 20))
+        Button(frame, text=key.INSTALL_BEPINEX, bg="#353738", fg="#edf2f4", command=install_bepinex).grid(row=7, column=0, columnspan=2, padx=10, pady=(10, 20))
 
         # Configure grid columns to ensure centering
         frame.grid_columnconfigure(0, weight=1)
@@ -230,14 +232,14 @@ class InterfaceMenu:
         frame = Frame(parent, background="#353738")
         frame.pack(fill="both", expand=True)
 
-        heading = Label(frame, text="Non-Steam Installer", font=("Calibri", 18), background="#353738", fg="#edf2f4")
+        heading = Label(frame, text=key.NON_STEAM_INSTALL, font=("Calibri", 18), background="#353738", fg="#edf2f4")
         heading.grid(row=0, column=0, columnspan=2, pady=15, sticky="ews")
 
-        Label(frame, background="#353738", fg="#edf2f4", font=("Calibri", 12), text="Game Directory").grid(row=1, column=0, columnspan=2, padx=10, sticky="ews")
+        Label(frame, background="#353738", fg="#edf2f4", font=("Calibri", 12), text=key.NONSTEAM_GAMEDIR).grid(row=1, column=0, columnspan=2, padx=10, sticky="ews")
         self.game_dir_entry = Entry(frame, background="#353738", fg="#edf2f4", font=("Calibri", 12))
         self.game_dir_entry.grid(row=2, column=0, columnspan=2, padx=10, pady=0, sticky="ewn")
 
-        Tooltip(self.game_dir_entry, "Enter the full directory path for the game installation.")
+        Tooltip(self.game_dir_entry, key.TOOLTIP_ENTERDIR)
 
         def install_bepinex_nonsteam():
             foldername = self.game_dir_entry.get()
@@ -245,7 +247,7 @@ class InterfaceMenu:
             scripting_backend = detect_scripting_backend(foldername)
             
             if not foldername.strip():
-                messagebox.showerror("Error", "Game Directory cannot be empty.")
+                messagebox.showerror(key.ERRORS_EMPTYGAMEDIR_TITLE, key.ERRORS_EMPTYGAMEDIR_DESC)
                 return
 
             if os.path.isdir(foldername):
@@ -259,11 +261,11 @@ class InterfaceMenu:
                     doorstop_dest = os.path.join(foldername, ".doorstop_version")
                     if os.path.exists(doorstop_dest):
                         os.remove(doorstop_dest)
-                    messagebox.showinfo("BepInEx Installed", "BepInEx has been installed. Please run the game once, then exit.")
+                    messagebox.showinfo(key.INFO_BEPINEXINSTALLED_TITLE, key.INFO_BEPINEXINSTALLED_DESC)
                 else:
-                    messagebox.showinfo("BepInEx Already Installed", f"BepInEx is already installed in {foldername}")
+                    messagebox.showinfo(key.INFO_BEPINEXALREADYADDED_TITLE, key.INFO_BEPINEXALREADYADDED_DESC + foldername)
             else:
-                messagebox.showerror("Error", "Invalid directory: The specified directory does not exist.")
+                messagebox.showerror(key.ERRORS_INVALIDDIR_TITLE, key.ERRORS_INVALIDDIR_DESC)
 
         def open_folder():
             dest = game_dir_prompt()  
@@ -274,19 +276,19 @@ class InterfaceMenu:
         def game_dir_prompt():
             root = Tk()
             root.withdraw()
-            steam_path = filedialog.askdirectory(title="Select Non-Steam Game Directory")
+            steam_path = filedialog.askdirectory(title=key.NONSTEAM_ASKDIR)
             if steam_path and os.path.exists(os.path.join(steam_path, "steamapps", "common")):
                 return steam_path
             else:
-                messagebox.showerror("Error", "Path " + os.path.join(steam_path, "steamapps", "common") + " doesn't exist")
+                messagebox.showerror(key.ERRORS_INVALIDPATH_TITLE, key.ERRORS_INVALIDPATH_DESC + os.path.join(steam_path, "steamapps", "common"))
             return None
 
         # Place the "Open Folder" button directly below the explanatory label
-        open_folder_btn = Button(frame, text="Open Folder", bg="#353738", fg="#edf2f4", command=open_folder)
+        open_folder_btn = Button(frame, text=key.NONSTEAM_OPENFOLDER, bg="#353738", fg="#edf2f4", command=open_folder)
         open_folder_btn.grid(row=3, column=0, padx=10, pady=(0, 10), sticky="ew")
-        Tooltip(open_folder_btn, "Click 'Open Folder' to select your game directory or type it in yourself")
+        Tooltip(open_folder_btn, key.TOOLTIP_OPENDIR)
         
-        Label(frame, text="Select BepInEx Version:", background="#353738", fg="#edf2f4", font=("Calibri", 12)).grid(row=4, column=0, columnspan=2, padx=10, pady=(5, 5), sticky="ew")
+        Label(frame, text=key.SELECTBEPINEX, background="#353738", fg="#edf2f4", font=("Calibri", 12)).grid(row=4, column=0, columnspan=2, padx=10, pady=(5, 5), sticky="ew")
         version_dropdown = OptionMenu(frame, self.selected_version, *self.bepinex_versions)
         version_dropdown.config(background="#353738", fg="#edf2f4", font=("Calibri", 12))
         version_dropdown.grid(row=6, column=0, columnspan=2, padx=10, pady=(5, 70), sticky="")
@@ -295,7 +297,7 @@ class InterfaceMenu:
         frame.grid_rowconfigure(9, minsize=20)
 
         # Place the "Install BepInEX" button below the spacing row
-        Button(frame, text="Install BepInEX", bg="#353738", fg="#edf2f4", command=install_bepinex_nonsteam).grid(row=9, column=0, columnspan=2, padx=10, pady=(5, 50))
+        Button(frame, text=key.INSTALL_BEPINEX, bg="#353738", fg="#edf2f4", command=install_bepinex_nonsteam).grid(row=9, column=0, columnspan=2, padx=10, pady=(5, 50))
 
         # Configure grid columns to ensure centering
         frame.grid_columnconfigure(0, weight=1)
@@ -362,23 +364,21 @@ def get_bepinex_download_url(architecture, version, scripting_backend):
     os_system = platform.system()
 
     if os_system not in ["Windows", "Linux", "Darwin"]:
-        messagebox.showerror("Error", "Unsupported OS detected.")
+        messagebox.showerror(key.ERRORS_UNSUPPORTEDOS_TITLE, key.ERRORS_UNSUPPORTEDOS_DESC)
         return None
 
     os_system = "win" if os_system == "Windows" else "linux" if os_system == "Linux" else "macos_x64"
     urls = generate_urls(base_url, architecture, version, os_system, scripting_backend)
 
     for url in urls:
-        print(f"Testing URL: {url}")
         try:
             response = requests.head(url, allow_redirects=True)
             if response.status_code == 200:
-                print(f"Valid URL found: {url}")
                 return url
         except requests.RequestException as e:
             print(f"Failed to retrieve URL: {url}, Error: {e}")
 
-    messagebox.showerror("Error", "No valid download URL found.")
+    messagebox.showerror(key.ERRORS_NOVALIDURL_TITLE, key.ERRORS_NOVALIDURL_DESC)
     return None
 
 def detect_scripting_backend(game_directory): # REQUIRED FOR VERSIONS 6.0.0 PRE 1 AND HIGHER
