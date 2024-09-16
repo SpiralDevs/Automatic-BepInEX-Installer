@@ -9,7 +9,7 @@ with open(os.path.join('resources', 'langs', f'{CURR_LANG}.json')) as file:
 ROOT_TITLE = translation['root']['title']
 
 ROOT_STEAM =  translation['root']['steam']
-ROOT_STEAM =  translation['root']['non_steam']
+ROOT_NONSTEAM =  translation['root']['non_steam']
 
 WIDGETS_INSERT = translation['widget']['insert']
 

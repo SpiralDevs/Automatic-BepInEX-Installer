@@ -232,7 +232,7 @@ class InterfaceMenu:
         frame = Frame(parent, background="#353738")
         frame.pack(fill="both", expand=True)
 
-        heading = Label(frame, text=key.NON_STEAM_INSTALL, font=("Calibri", 18), background="#353738", fg="#edf2f4")
+        heading = Label(frame, text=key.ROOT_NONSTEAM, font=("Calibri", 18), background="#353738", fg="#edf2f4")
         heading.grid(row=0, column=0, columnspan=2, pady=15, sticky="ews")
 
         Label(frame, background="#353738", fg="#edf2f4", font=("Calibri", 12), text=key.NONSTEAM_GAMEDIR).grid(row=1, column=0, columnspan=2, padx=10, sticky="ews")
